@@ -1,0 +1,224 @@
+<template name="index">
+  <link rel="icon" sizes="16x16 32x32" href="/favicon.ico?v=2">
+  {{> navbar }} <!-- here -->
+  <div class="input-group" style="margin:1em 1em 0 1em;">
+    <input type="text" class="form-control" style="padding:1em; font-size: 120%; color:black; padding:0em 1em 0em 1em; height:2em; border: 1px solid #aaa; border-radius: 0;" placeholder="Materials search" id="search"/>
+    <div class="input-group-btn">
+      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="selectedSearch">Choose search<span class="caret"></span></button>
+      <ul class="dropdown-menu dropdown-menu-right" role="menu">
+        <li><a id="materials">Materials</a></li>
+        <li><a id="precursors">Precursors</a></li>
+      </ul>
+    </div><!-- /btn-group -->
+  </div>
+  <div style='padding-bottom: 2em;' class='clearfix'></div>
+  <table id="startups" class='table table-ranked table-hover table-stripped' style='font-size:0.7em; padding-top:1em; -webkit-animation-duration: 500ms; -moz-animation-duration:500ms; animation-duration: 500ms;'>
+    <thead>
+      <tr>
+        <th>
+          <div name="title" class="sortColumn" style="cursor:pointer;">
+            <span class='glyphicon glyphicon-sort pull-right'></span><span class="pull-left">Title</span>
+          </div>
+        </th>
+        <th>
+          <div name="first_author" class="sortColumn" style="white-space: nowrap; cursor:pointer;">
+            <span class='glyphicon glyphicon-sort pull-right'></span><span class="pull-left">First author</span>
+          </div>
+        </th>
+        <th>
+          <div name="solid_state" class="sortColumn" style="white-space: nowrap; cursor:pointer;">
+            <span class='glyphicon glyphicon-sort pull-right'></span><span class="pull-left">Solid state reaction</span>
+          </div>
+        </th>
+        <th>
+          <div name="max_temperature_experimental" class="sortColumn" style="white-space: nowrap; cursor:pointer;">
+            <span class='glyphicon glyphicon-sort pull-right'></span><span class="pull-left">Highest temperature (ºC)</span>
+          </div>
+        </th>
+        <th>
+          <div name="doi_link" class="sortColumn" style="white-space: nowrap; cursor:pointer;">
+            <span class='glyphicon glyphicon-sort pull-right'></span><span class="pull-left">Link</span>
+          </div>
+        </th>
+        <th>
+          <div name="materials" class="sortColumn" style="white-space: nowrap; cursor:pointer;">
+            <span class='glyphicon glyphicon-sort pull-right'></span><span class="pull-left">Materials</span>
+          </div>
+        </th>
+        <th>
+          <div name="precursors" class="sortColumn" style="white-space: nowrap; cursor:pointer;">
+            <span class='glyphicon glyphicon-sort pull-right'></span><span class="pull-left">Precursors</span>
+          </div>
+        </th>
+      </tr>
+    </thead>
+  {{#if searching}}
+    <tbody>
+      {{#each this.content}}
+        <tr>
+          <td style='font-weight:700; text-align:left; max-width: 10em;'>
+            {{title}}
+          </td>
+          <td style='font-weight:700; text-align:left;'>
+            {{first_author}}
+          </td>
+          <td style='font-weight:700; text-align:left;'>
+            {{solid_state}}
+          </td>
+          <td style='font-weight:700; text-align:left;'>
+            {{max_temperature_experimental}}
+          </td>
+          <td style='font-weight:700; text-align:left;'>
+            <a href="{{doi_link}}" style="cursor: pointer;">More info</a>
+          </td>
+          <td style='font-weight:700; text-align:left;'>
+            {{materials materials_experimental}}
+          </td>
+          <td style='font-weight:700; text-align:left;'>
+            {{precursors precursors_experimental}}
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+  {{else}}
+    <tbody>
+      {{#each this.content}}
+        <tr>
+          <td style='font-weight:700; text-align:left; max-width: 10em;'>
+            {{title}}
+          </td>
+          <td style='font-weight:700; text-align:left;'>
+            {{first_author}}
+          </td>
+          <td style='font-weight:700; text-align:left;'>
+            {{solid_state}}
+          </td>
+          <td style='font-weight:700; text-align:left;'>
+            {{max_temperature_experimental}}
+          </td>
+          <td style='font-weight:700; text-align:left;'>
+            <a href="{{doi_link}}" style="cursor: pointer;">More info</a>
+          </td>
+          <td style='font-weight:700; text-align:left;'>
+            {{materials materials_experimental}}
+          </td>
+          <td style='font-weight:700; text-align:left;'>
+            {{precursors precursors_experimental}}
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+  {{/if}}
+  </table>
+  {{#if searching}}
+    <div class='row' style='margin-top:2em;'>
+      <div class='col-xs-4 text-center'>
+        {{#if noZero}}
+          <div id='beforeButton' class='btn btn-primary text-center beforeBtn'>Previous</div>
+        {{/if}}
+      </div>
+      <div class='col-xs-4 text-center'>
+        <div id='loadMoreButton' style="text-align:center; width: 100%; margin:0 auto;">{{actualPage}}</div>
+      </div>
+      <div class='col-xs-4 text-center'>
+        {{#if noLastPage}}
+          <div id='nextButton' class='btn btn-primary text-center nextBtn'>Next</div>
+        {{/if}}
+      </div>
+    </div>
+  {{/if}}
+  <br><br> <!-- Keep this instead of a padding later to have some space on mobile -->
+</template>
+
+<template name="history">
+  {{> nav }}
+  <div class="page-header">
+    <h1>Search History <small>Most recent first</small></h1>
+  </div>
+  {{#each searches}}
+  <ul class="list-group">
+    <li class="list-group-item">{{value}}</li>
+  </ul>
+  {{/each}}
+</template>
+
+<template name="about">
+  {{> navbar }}
+  <div class="page-header">
+    <h1>About <small>MaterialsTable</small></h1>
+  </div>
+  <div class="well well-lg">The Materials Table is a table for stable Materials. The aim of this project was to extract relevant information from DOE documents accessed through SciTech Connect, store them in a MongoDB and access them through an interface build with Meteor. 
+
+  The search on this website is focused on battery materials. It can be searched for materials and precursors and the results can be ordered e.g. by if they contain the term solid-state synthesis and their highest occurring temperature (which can be assumed to belong to the solid-state synthesis if found).
+
+<br><br>
+
+A great shoutout to Miriam Bratman and Luis Fernández (tran.sl) for introducing me to Meteor and all their overwhelming support and help!
+</div>
+</template>
+
+<template name="navbar">
+  <nav class="navbar navbar-default" role="navigation">
+    <div class="container-fluid">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="/">MaterialsTable</a>
+      </div>
+
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+          <li><a href="#">{{>loginButtons align="left"}}</a></li>
+        </ul>
+
+        <ul class="nav navbar-nav navbar-right">
+
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">About<span class="caret"></span></a>
+            <ul class="dropdown-menu" role="menu">
+              <li><a href="/about">About</a></li>
+              <li class="divider"></li>
+              <li><a href="https://www.google-melange.com/gsoc/project/details/google/gsoc2014/sengelke/5668600916475904">Google Summer of Code 2014</a></li>
+              <li class="divider"></li>
+              <li><a href="https://github.com/simonengelke/MaterialsTable">GitHub</a></li>
+              <li><a href="https://docs.google.com/document/d/1v-pIUT-AANbt5wT2WkYF7KgfSrXRDx9VHJETv3zsfVA/edit?usp=sharing">Manual</a></li>
+            </ul>
+          </li>
+
+        </ul>
+      </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+  </nav>
+</template>
+
+<template name="history">
+  {{> navbar }}
+  <div class="page-header">
+    <h1>Search History <small>Most recent first</small></h1>
+  </div>
+  {{#each searches}}
+  <ul class="list-group">
+    <li class="list-group-item">{{value}}</li>
+  </ul>
+  {{/each}}
+</template>
+
+<template name="about">
+  {{> navbar }}
+  <div class="page-header">
+    <h1>About <small>MaterialsTable</small></h1>
+  </div>
+  <div class="well well-lg">
+  The search on this website is focused on battery materials. It can be searched for materials and precursors and the results can be ordered e.g. by if they contain the term solid-state synthesis and their highest occurring temperature (which can be assumed to belong to the solid-state synthesis if found).
+
+  <br><br>
+
+  A great shoutout to Miriam Bratman and Luis Fernández (tran.sl) for introducing me to Meteor and all their overwhelming support and help!
+  </div>
+</template>
